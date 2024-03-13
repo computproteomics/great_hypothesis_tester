@@ -1,10 +1,8 @@
-sequence,collision_energy_aligned_normed,precursor_charge_onehot,intensities
-AAAA,0.25,"[0, 1, 0, 0, 0, 0]",
-GGGG,0.25,"[0, 1, 0, 0, 0, 0]",
-AGAGTTAGC,0.25,"[0, 1, 0, 0, 0, 0]",
-EGGETTWYNRRFQQE,0.25,"[0, 1, 0, 0, 0, 0]",
-KWEGHYMEHG,0.25,"[0, 1, 0, 0, 0, 0]",
-AAAARRDDYYWTTT,0.25,"[0, 1, 0, 0, 0, 0]",
-TRGSPEPSPEAAADGPTVSPPER,0.25,"[0, 1, 0, 0, 0, 0]",
-VQEETTLVDDPFQMK,0.25,"[0, 1, 0, 0, 0, 0]",
-IAAGLGPSYSGSLLLFDALR,0.25,"[0, 1, 0, 0, 0, 0]",
+sequence,collision_energy_aligned_normed,precursor_charge_onehot,intensities,fragmentation
+AAAA,0.25,"[0,0,1,0,0,0]",2.0
+AGAGTTAGC,0.25,"[0,0,1,0,0,0]",,2.0
+GAAGAGAAG,0.25,"[0,0,1,0,0,0]",2.0
+TRGSPEPSPEAAADGPTVSPPER,0.25,"[0,0,1,0,0,0]",2.0
+AAAARRDDYYWTTT,0.25,"[0,0,1,0,0,0]",2.0
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,0.25,"[0,0,1,0,0,0]",2.0
+ADPPKTHVTHHPISDHEATLR,0.25,"[0,0,1,0,0,0]",2.0

@@ -1,0 +1,6 @@
+*.json
+*.csv
+*.fasta
+*.pyc
+
+__pycache_
