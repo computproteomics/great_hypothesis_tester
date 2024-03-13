@@ -116,21 +116,20 @@ class HypothesisTester():
             # map precursor charge to dlomix format
             formatted_charge = [self.charge for _ in range(len(self.sequences))]
 
+            formatted_intensities = [np.nan for _ in range(len(self.sequences))]
+
             # map data to dlomix format
             formatted_data = tuple(
                 [
                     np.array(list(self.sequences.values())),
-                    np.array([self.ce] * len(self.sequences)),
+                    np.array([self.ce] * len(self.sequences)).reshape(-1,1),
                     convert_nested_list_to_numpy_array(formatted_charge, dtype=np.float64),
-                    np.array([self.frag] * len(self.sequences))
+                    convert_nested_list_to_numpy_array(formatted_intensities)
                 ]
             )
 
-            # BIG TODO
-            # check how to make without cvs
-
             # load data from input file into dataset
-            extracted_data = IntensityDataset(data_source='intensity_test.csv',
+            extracted_data = IntensityDataset(data_source=formatted_data,
                                               seq_length=self.seq_length,
                                               test=True)
             
@@ -247,3 +246,6 @@ class HypothesisTester():
 
         return processed_intensities
 
+
+tester = HypothesisTester()
+tester.run_hypothesis('sequences.fasta')
