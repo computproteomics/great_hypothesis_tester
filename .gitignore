@@ -3,4 +3,4 @@
 *.fasta
 *.pyc
 
-__pycache_
+hypothesis_tester_old.py
