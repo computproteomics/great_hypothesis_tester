@@ -9,6 +9,10 @@ import pandas as pd
 
 from koinapy import Koina
 
+import matplotlib.pyplot as plt
+import spectrum_utils.spectrum as sus
+import spectrum_utils.plot as sup
+
 
 """
 Global constants
@@ -68,7 +72,7 @@ class HypothesisTester():
         Prints the experimental statistics in a formatted way.
     """
 
-    def __init__(self, collision_energy: int = 25, precursor_charge = 2, max_seq_length = 30) -> None:
+    def __init__(self, collision_energy: int = 25, precursor_charge = 2, max_seq_length = 30, precursor_mz = 300) -> None:
 
         """
         Parameters
@@ -81,11 +85,15 @@ class HypothesisTester():
 
         max_seq_length: int, optional
             The maximum length a peptide sequence can have in the FASTA file (default is 30).
+
+        precursor_mz: int, optional
+            The mz value for the precursor (default is 300).
         """
         
         self.collision_energy = collision_energy
         self.max_seq_length = max_seq_length
         self.charge = precursor_charge
+        self.precursor_mz = precursor_mz
 
         self.sequence_lengths = None    
         self.intensity_stats = None
@@ -345,8 +353,56 @@ class HypothesisTester():
         # building string for the end of statistics
         ending_string = \
                     '-------------------------------------------------------------------------------------------------------\n'
-        
-        print(rt_stats_output, intens_stats_output, ending_string)
+    
+        # print stats
+        print(rt_stats_output)
+
+        # print plots for stats
+        plt.bar(self.rt_stats.index, self.rt_stats['Retention Time'].values)
+        plt.xlabel('Sequences')
+        plt.ylabel('Retention Time')
+        plt.title('Retention Time Predictions')
+
+        plt.show()
+
+        print(intens_stats_output)
+
+        # print spectra
+        for index, row in self.intensity_stats.iterrows():
+
+            mz_row = []
+            intensity_row = []
+
+            for column in self.intensity_stats.columns:
+
+                if '_mz' in column:
+
+                    value = row[column]
+
+                    if value != '-':
+                        mz_row.append(value)
+
+                elif '_intensity' in column:
+
+                    value = row[column]
+
+                    if value != '-':
+                        intensity_row.append(value)
+
+            plt.figure(figsize=(10,5))
+            sup.spectrum(
+                sus.MsmsSpectrum(
+                    identifier=index,
+                    precursor_mz=float(self.precursor_mz),
+                    precursor_charge=int(self.charge),
+                    mz=mz_row,
+                    intensity=intensity_row
+                )
+            )
+            plt.title(index)
+            plt.show()
+             
+        print(ending_string)
 
 
     def __build_retention_time_stats__(self, prediction: np.array, model_type: str) -> None:
@@ -390,6 +446,23 @@ class HypothesisTester():
 
 
     def __build_intensity_stats__(self, prediction, model_type) -> None:
+
+        """
+        Builds the statistics of the results from the intensity prediction.
+
+        Parameters
+        ----------
+        prediction: np.array
+            The results of the prediction as a numpy array or pandas DataFrame.
+
+        model_type: str
+            The deep learning model that was used for the prediction.
+
+        Raises
+        ------
+        ValueError
+            If given prediction is empty or model type is not 'prosit' or 'deeplc'.
+        """
         
         if model_type != 'prosit' and model_type != 'ms2pip':
             raise ValueError('Unknown model type!')
@@ -421,15 +494,15 @@ class HypothesisTester():
 
             for i in range(1, self.max_seq_length):
 
-                y_filtered_df = koina_df[koina_df['annotations'].str.decode('utf-8').str.contains(f'y{i}')]
+                y_filtered_df = koina_df[koina_df['annotations'].str.decode('utf-8').str.endswith(f'y{i}+1')]
 
-                b_filtered_df = koina_df[koina_df['annotations'].str.decode('utf-8').str.contains(f'b{i}')]
+                b_filtered_df = koina_df[koina_df['annotations'].str.decode('utf-8').str.endswith(f'b{i}+1')]
 
-                intens_df[f'mz_y{i}'] = y_filtered_df['mz'].values[0]
-                intens_df[f'mz_b{i}'] = b_filtered_df['mz'].values[1]
+                intens_df[f'mz_y{i}'] = y_filtered_df['mz'].values.astype(str)
+                intens_df[f'mz_b{i}'] = b_filtered_df['mz'].values.astype(str)
 
-                intens_df[f'intensity_y{i}'] = y_filtered_df['intensities'].values[0]
-                intens_df[f'intensity_b{i}'] = b_filtered_df['intensities'].values[1]
+                intens_df[f'intensity_y{i}'] = y_filtered_df['intensities'].values
+                intens_df[f'intensity_b{i}'] = b_filtered_df['intensities'].values
 
         else:
 
