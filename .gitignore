@@ -2,5 +2,7 @@
 *.csv
 *.fasta
 *.pyc
+*.txt
 
 hypothesis_tester_old.py
+analyzer.py
