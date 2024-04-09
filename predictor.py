@@ -210,7 +210,3 @@ class Predictor:
         result_frame.columns = [rename_column(column) for column in result_frame.columns]
 
         return result_frame
-
-
-predictor = Predictor()
-predictor.predict_retention_time('2k_7length_aromatic.csv', sequence_type='aromatic')
