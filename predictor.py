@@ -213,4 +213,4 @@ class Predictor:
 
 
 predictor = Predictor()
-predictor.predict_fragmentation('2k_7length_aromatic.csv')
+predictor.predict_retention_time('2k_7length_aromatic.csv', sequence_type='aromatic')

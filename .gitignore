@@ -4,5 +4,8 @@
 *.pyc
 *.txt
 
+__pycache__/
+.vscode/
+
 hypothesis_tester_old.py
 analyzer.py

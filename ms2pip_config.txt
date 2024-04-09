@@ -1,3 +1,0 @@
-model=HCD
-frag_error=0.002
-out=csv
