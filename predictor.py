@@ -1,9 +1,6 @@
 import os
-import csv
 import pandas as pd
 import numpy as np
-
-import json
 
 from koinapy import Koina
 
@@ -210,3 +207,62 @@ class Predictor:
         result_frame.columns = [rename_column(column) for column in result_frame.columns]
 
         return result_frame
+
+
+predictor = Predictor()
+
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_19length_hydrophobic.csv', 'hydrophobic')
+"""predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_21length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_24length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_27length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_30length_hydrophobic.csv', 'hydrophobic')
+ """
+""" predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_7length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_10length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_13length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_16length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_19length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_21length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_24length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_27length_hydrophobic.csv', 'hydrophobic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_30length_hydrophobic.csv', 'hydrophobic') """
+
+"""
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_7length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_10length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_13length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_16length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_19length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_21length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_24length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_27length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_30length_hydrophilic.csv', 'hydrophilic')
+
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_7length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_10length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_13length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_16length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_19length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_21length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_24length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_27length_hydrophilic.csv', 'hydrophilic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_30length_hydrophilic.csv', 'hydrophilic')
+
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_13length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_16length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_19length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_21length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_24length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_27length_aromatic.csv', 'aromatic')
+predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_30length_aromatic.csv', 'aromatic')
+
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_13length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_16length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_19length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_21length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_24length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_27length_aromatic.csv', 'aromatic')
+predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_30length_aromatic.csv', 'aromatic')
+
+
+ """
