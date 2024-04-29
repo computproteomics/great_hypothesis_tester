@@ -31,6 +31,9 @@ class Predictor:
         if not os.path.exists(input_file):
             raise AttributeError(f'File {input_file} does not exist!')
 
+        print('-----------------------------------------------------------------------------------------')
+        print('Starting Retention Time Prediction for ' + input_file + ' ...')
+
         # ----------------------------------------------------------------- #
         # prepare retention time input                                      #
         # ----------------------------------------------------------------- #
@@ -45,6 +48,8 @@ class Predictor:
         # use 2019 Prosit model for prediction                              #
         # ----------------------------------------------------------------- #
 
+        print('Getting Prosit predictions...')
+
         # build predictor
         prosit_2019_predictor = Koina(KOINA_PROSIT_2019_RT_MODEL, KOINA_SERVER)
 
@@ -54,6 +59,8 @@ class Predictor:
         # ----------------------------------------------------------------- #
         # use DeepLC model for prediction                                   #
         # ----------------------------------------------------------------- #
+
+        print('Getting DeepLC predictions...')
 
         # build predictor
         deeplc_predictor = Koina(KOINA_DEEPLC_RT_MODEL, KOINA_SERVER)
@@ -66,10 +73,10 @@ class Predictor:
         # ----------------------------------------------------------------- #
         
         # build predictor
-        alphapept_predictor = Koina(KOINA_ALPHAPEPT_RT_MODEL, KOINA_SERVER)
+        #alphapept_predictor = Koina(KOINA_ALPHAPEPT_RT_MODEL, KOINA_SERVER)
 
         # make predictions
-        alphapept_prediction = alphapept_predictor.predict(rt_input)['irt'].flatten()
+        #alphapept_prediction = alphapept_predictor.predict(rt_input)['irt'].flatten()
 
         # ----------------------------------------------------------------- #
         # write results to file                                             #
@@ -82,18 +89,30 @@ class Predictor:
         rt_output['Sequence Type'] = np.array([sequence_type]* len(input['seq'].values))
         rt_output['Prosit Prediction'] = prosit_2019_prediction
         rt_output['DeepLC Prediction'] = deeplc_prediction
-        rt_output['Alpha Pept Prediction'] = alphapept_prediction
+        #rt_output['Alpha Pept Prediction'] = alphapept_prediction
+
+        query_name = os.path.basename(input_file).split('.')[0]
+
+        if not os.path.exists('./results/{}_results'.format(query_name)):
+            os.mkdir('./results/{}_results'.format(query_name))
 
         # write result to .csv file
-        result_filename = '{}_irt_results.csv'.format(input_file.split('.')[0])
+        result_filename = './results/{}_results/{}_irt_results.csv'.format(query_name, query_name)
 
         rt_output.to_csv(result_filename, index=False)
+
+        print('Done! Results can be found in ' + result_filename)
+        print('-----------------------------------------------------------------------------------------')
+
 
 
     def predict_fragmentation(self, input_file: str, sequence_type: str = 'random') -> None:
         
         if not os.path.exists(input_file):
             raise AttributeError(f'File {input_file} does not exist!')
+
+        print('-----------------------------------------------------------------------------------------')
+        print('Starting Fragmentation Prediction for ' + input_file + ' ...')
 
         # ----------------------------------------------------------------- #
         # prepare fragmentation input                                       #
@@ -112,6 +131,8 @@ class Predictor:
         # use Prosit model for prediction                                   #
         # ----------------------------------------------------------------- #
 
+        print('Getting Prosit predictions...')
+
         # build predictor
         prosit_2019_predictor = Koina(KOINA_PROSIT_2019_FRAG_MODEL, KOINA_SERVER)
 
@@ -121,6 +142,8 @@ class Predictor:
         # ----------------------------------------------------------------- #
         # use DeepLC model for prediction                                   #
         # ----------------------------------------------------------------- #
+
+        print('Getting DeepLC predictions...')
 
         # build predictor
         deeplc_predictor = Koina(KOINA_DEEPLC_FRAG_MODEL, KOINA_SERVER)
@@ -132,18 +155,22 @@ class Predictor:
         # use AlphaPept model for prediction                                #
         # ----------------------------------------------------------------- #
 
-        # build predictor
-        alphapept_predictor = Koina(KOINA_ALPHAPEPT_FRAG_MODEL, KOINA_SERVER)
+        #print('Getting Alphapept predictions...')
 
-        alphapept_prediction = alphapept_predictor.predict(frag_input)
+        # build predictor
+        #alphapept_predictor = Koina(KOINA_ALPHAPEPT_FRAG_MODEL, KOINA_SERVER)
+
+        #alphapept_prediction = alphapept_predictor.predict(frag_input)
 
         # ----------------------------------------------------------------- #
         # map API responses                                                 #
         # ----------------------------------------------------------------- #
 
+        print('Parsing results...')
+
         prosit_2019_result_df = self.__map_koina_prediction__(prosit_2019_prediction)
         deeplc_result_df = self.__map_koina_prediction__(deeplc_prediction, 'deeplc')
-        alphapept_result_df = self.__map_koina_prediction__(alphapept_prediction, 'alphapept')
+        #alphapept_result_df = self.__map_koina_prediction__(alphapept_prediction, 'alphapept')
 
         # ----------------------------------------------------------------- #
         # write results to file                                             #
@@ -154,12 +181,20 @@ class Predictor:
         frag_output['Sequence Length'] = frag_input['peptide_sequences'].str.len().values
         frag_output['Sequence Type'] = np.array([sequence_type]* len(input['seq'].values))
 
-        frag_output = pd.concat([frag_output,prosit_2019_result_df, deeplc_result_df, alphapept_result_df], axis=1, ignore_index=False)
+        frag_output = pd.concat([frag_output,prosit_2019_result_df, deeplc_result_df], axis=1, ignore_index=False)
+
+        query_name = os.path.basename(input_file).split('.')[0]
+
+        if not os.path.exists('./results/{}_results'.format(query_name)):
+            os.mkdir('./results/{}_results'.format(query_name))
 
         # write result to .csv file
-        result_filename = '{}_fragmentation_results.csv'.format(input_file.split('.')[0])
+        result_filename = './results/{}_results/{}_fragmentation_results.csv'.format(query_name, query_name)
 
         frag_output.to_csv(result_filename, index=False)
+
+        print('Done! Results can be found in ' + result_filename)
+        print('-----------------------------------------------------------------------------------------')
 
 
     def __map_koina_prediction__(self, prediction: dict, predictor: str = 'prosit') -> pd.DataFrame:
@@ -171,6 +206,8 @@ class Predictor:
 
         # build dataframe for each sequence
         for i in range(len(prediction['intensities'])):
+
+            print('{} of {}'.format(i + 1, len(prediction['intensities'])), end='\r')
 
             # extract information
             current_intensities = prediction['intensities'][i]
@@ -207,62 +244,3 @@ class Predictor:
         result_frame.columns = [rename_column(column) for column in result_frame.columns]
 
         return result_frame
-
-
-predictor = Predictor()
-
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_19length_hydrophobic.csv', 'hydrophobic')
-"""predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_21length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_24length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_27length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophobic sequences/100k_30length_hydrophobic.csv', 'hydrophobic')
- """
-""" predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_7length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_10length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_13length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_16length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_19length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_21length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_24length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_27length_hydrophobic.csv', 'hydrophobic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophobic sequences/100k_30length_hydrophobic.csv', 'hydrophobic') """
-
-"""
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_7length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_10length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_13length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_16length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_19length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_21length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_24length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_27length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_retention_time('Hypothesis_Sequences/Hydrophilic sequences/100k_30length_hydrophilic.csv', 'hydrophilic')
-
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_7length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_10length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_13length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_16length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_19length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_21length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_24length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_27length_hydrophilic.csv', 'hydrophilic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Hydrophilic sequences/100k_30length_hydrophilic.csv', 'hydrophilic')
-
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_13length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_16length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_19length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_21length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_24length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_27length_aromatic.csv', 'aromatic')
-predictor.predict_retention_time('Hypothesis_Sequences/Aromatic sequences/100k_30length_aromatic.csv', 'aromatic')
-
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_13length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_16length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_19length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_21length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_24length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_27length_aromatic.csv', 'aromatic')
-predictor.predict_fragmentation('Hypothesis_Sequences/Aromatic sequences/100k_30length_aromatic.csv', 'aromatic')
-
-
- """
