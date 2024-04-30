@@ -19,8 +19,8 @@ if len(sys.argv) != 2:
 
 # run predictions on input file
 predictor = Predictor()
-predictor.predict_retention_time(sys.argv[1])
-predictor.predict_fragmentation(sys.argv[1])
+#predictor.predict_retention_time(sys.argv[1])
+#predictor.predict_fragmentation(sys.argv[1])
 
 # run the analysis script on the prediction data
 subprocess.run(f"Rscript {ANALYSIS_FILE_PATH} {RT_RESULT_FILE} {FRAG_RESULT_FILE}")

@@ -47,8 +47,10 @@ rt_boxplot = boxplot(rt_boxplot_data, col='lightblue', main='Retention Time per 
 # Analysis of fragmentation  results                      #
 # ------------------------------------------------------- #
 
+message(paste("Starting Fragmentation Analysis for", args[2], "..."))
+
 # read fragmentation pattern data
-fragData <- read.csv('C:/Users/user/Desktop/Studium/Berufspraktikum/great_hypothesis_tester/results/100k_10_length_random_sequences_results/100k_10_length_random_sequences_fragmentation_results.csv')
+fragData <- read.csv(args[2])
 
 # filter m/z and intensity values
 yMzProsit <- fragData[, grep('y\\d+_mz_prosit', names(fragData))]
