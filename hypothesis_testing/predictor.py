@@ -282,13 +282,18 @@ class Predictor:
         Maps the predictions of the Koina-API into the predefined format of the result
         file.
 
-        Paramters
+        Parameters
         ---------
         prediction: dict
             The predictions that were made by the deep learning model.
         predictor: str, optional
             The name of the model that was used for the predictions (default is
             "prosit").
+
+        Raises
+        ------
+        ValueError
+            If predictions are not valid.
         """
 
         if prediction is None or len(prediction) == 0:
