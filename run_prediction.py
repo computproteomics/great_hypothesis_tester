@@ -17,6 +17,9 @@ FRAG_RESULT_FILE = "./results/{}_results/{}_fragmentation_results.csv".format(
 if len(sys.argv) != 2:
     raise Exception("Invalid number of arguments!")
 
+if not os.path.exists(sys.argv[1]):
+    raise Exception(f"File {sys.argv[1]} not found!")
+
 # run predictions on input file
 predictor = Predictor()
 predictor.predict_retention_time(sys.argv[1])
