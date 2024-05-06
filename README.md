@@ -7,6 +7,12 @@ The *great_hypothesis_tester* framework can easily be installed by simply clonin
 git clone https://github.com/computproteomics/great_hypothesis_tester
 ```
 
+The framework has only one dependency on *KoinaAPI*, which can be installed via pip.
+
+```
+pip install koinapy
+```
+
 ## Usage
 The entire prediction pipeline can be run by executing the 'run_hypothesis.py' Python script and providing the path to the .csv file, in which the peptide sequences are stored.
 
