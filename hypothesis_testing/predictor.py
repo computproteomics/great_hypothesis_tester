@@ -12,7 +12,7 @@ KOINA_DEEPLC_RT_MODEL = "Deeplc_hela_hf"
 KOINA_ALPHAPEPT_RT_MODEL = "AlphaPept_rt_generic"
 
 KOINA_PROSIT_2019_FRAG_MODEL = "Prosit_2019_intensity"
-KOINA_DEEPLC_FRAG_MODEL = "ms2pip_2021_HCD"
+KOINA_MS2PIP_FRAG_MODEL = "ms2pip_2021_HCD"
 KOINA_ALPHAPEPT_FRAG_MODEL = "AlphaPept_ms2_generic"
 
 KOINA_SERVER = "koina.wilhelmlab.org:443"
@@ -213,10 +213,10 @@ class Predictor:
         print("Getting DeepLC predictions...")
 
         # build predictor
-        deeplc_predictor = Koina(KOINA_DEEPLC_FRAG_MODEL, KOINA_SERVER)
+        ms2pip_predictor = Koina(KOINA_MS2PIP_FRAG_MODEL, KOINA_SERVER)
 
         # make predictions
-        deeplc_prediction = deeplc_predictor.predict(frag_input)
+        ms2pip_prediction = ms2pip_predictor.predict(frag_input)
 
         # ----------------------------------------------------------------- #
         # use AlphaPept model for prediction                                #
@@ -236,7 +236,7 @@ class Predictor:
         print("Parsing results...")
 
         prosit_2019_result_df = self.__map_koina_prediction__(prosit_2019_prediction)
-        deeplc_result_df = self.__map_koina_prediction__(deeplc_prediction, "deeplc")
+        deeplc_result_df = self.__map_koina_prediction__(ms2pip_prediction, "ms2pip")
         # alphapept_result_df = self.__map_koina_prediction__(alphapept_prediction, 'alphapept')
 
         # ----------------------------------------------------------------- #
