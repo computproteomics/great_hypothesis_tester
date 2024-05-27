@@ -1,5 +1,4 @@
 *.json
-*.csv
 *.fasta
 *.pyc
 *.txt
